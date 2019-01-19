@@ -208,6 +208,8 @@ class CriticNetwork(object):
 
     def update_target_network(self):
         self.sess.run(self.update_target_network_params)
+        
+    
 
 # Taken from https://github.com/openai/baselines/blob/master/baselines/ddpg/noise.py, which is
 # based on http://math.stackexchange.com/questions/1287634/implementing-ornstein-uhlenbeck-in-matlab
@@ -251,7 +253,8 @@ def build_summaries():
 #   Agent Training
 # ===========================
 
-def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag):
+def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag, 
+          target_hard_copy_flag, target_hard_copy_interval):
 
     # Set up summary Ops
     summary_ops, summary_vars = build_summaries()
@@ -326,13 +329,19 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag):
                 a_outs = actor.predict(s_batch)
                 grads = critic.action_gradients(s_batch, a_outs)
                 actor.train(s_batch, grads[0])
-
+                
                 # Update target networks
-                actor.update_target_network()
-                critic.update_target_network()
+                if target_hard_copy_flag == True:
+                    if j % target_hard_copy_interval == 0:
+                        actor.update_target_network()
+                        critic.update_target_network()
+                else:
+                    actor.update_target_network()
+                    critic.update_target_network()
 
             s = s2
             ep_reward += r
+            #print('reward:{}'.format(r))
 
             if terminal:
 
@@ -361,7 +370,10 @@ def main(args):
         action_dim = env.action_space.shape[0]
         action_bound = env.action_space.high
         # Ensure action bound is symmetric
-        assert (env.action_space.high == -env.action_space.low)
+        assert (env.action_space.high == -env.action_space.low).all()
+        
+        if args['target_hard_copy_flag'] == True:
+            args['tau'] = 1.0
 
         actor = ActorNetwork(sess, state_dim, action_dim, action_bound,
                              float(args['actor_lr']), float(args['tau']),
@@ -373,7 +385,7 @@ def main(args):
                                actor.get_num_trainable_vars())
         
         actor_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(action_dim))
-
+        
         if args['use_gym_monitor']:
             if not args['render_env']:
                 env = wrappers.Monitor(
@@ -381,14 +393,14 @@ def main(args):
             else:
                 env = wrappers.Monitor(env, args['monitor_dir'], force=True)
 
-        train(sess, env, args, actor, critic, actor_noise, args['double_ddpg_flag'])
+        train(sess, env, args, actor, critic, actor_noise, args['double_ddpg_flag'], 
+              args['target_hard_copy_flag'], args['target_hard_copy_interval'])
 
-        if args['use_gym_monitor']:
-            env.monitor.close()
+        env.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='provide arguments for DDPG agent')
-
+    
     # agent parameters
     parser.add_argument('--actor-lr', help='actor network learning rate', default=0.0001)
     parser.add_argument('--critic-lr', help='critic network learning rate', default=0.001)
@@ -398,18 +410,20 @@ if __name__ == '__main__':
     parser.add_argument('--minibatch-size', help='size of minibatch for minibatch-SGD', default=64)
     
     # train parameters
-    parser.add_argument('--double-ddpg-flag', help='True, if run double-ddpg-flag. Otherwise, False.', default=True)
-
+    parser.add_argument('--double-ddpg-flag', help='True, if run double-ddpg-flag. Otherwise, False.', default=False)
+    parser.add_argument('--target-hard-copy-flag', help='Target network update method: hard copy', default=False)
+    parser.add_argument('--target-hard-copy-interval', help='Target network update hard copy interval', default=200)
+    
     # run parameters
-    parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='Pendulum-v0')
+    parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='Ant-v2') # InvertedPendulum-v2, Pendulum-v0
     parser.add_argument('--random-seed', help='random seed for repeatability', default=1234)
     parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=50000)
     parser.add_argument('--max-episode-len', help='max length of 1 episode', default=1000)
     parser.add_argument('--render-env', help='render the gym env', action='store_true')
     parser.add_argument('--use-gym-monitor', help='record gym results', action='store_true')
     parser.add_argument('--monitor-dir', help='directory for storing gym results', default='./results/gym_ddpg')
-    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/dddpg_run1')
-
+    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/ddpg_Tau_0.001_run1')
+    
     parser.set_defaults(render_env=False)
     parser.set_defaults(use_gym_monitor=True)
     
