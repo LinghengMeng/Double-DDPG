@@ -415,14 +415,15 @@ if __name__ == '__main__':
     parser.add_argument('--target-hard-copy-interval', help='Target network update hard copy interval', default=200)
     
     # run parameters
-    parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='Ant-v2') # InvertedPendulum-v2, Pendulum-v0
+    # HalfCheetah-v2, Ant-v2, InvertedPendulum-v2, Pendulum-v0
+    parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='HalfCheetah-v2')
     parser.add_argument('--random-seed', help='random seed for repeatability', default=1234)
     parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=50000)
     parser.add_argument('--max-episode-len', help='max length of 1 episode', default=1000)
     parser.add_argument('--render-env', help='render the gym env', action='store_true')
     parser.add_argument('--use-gym-monitor', help='record gym results', action='store_true')
     parser.add_argument('--monitor-dir', help='directory for storing gym results', default='./results/gym_ddpg')
-    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/ddpg_Tau_0.001_run1')
+    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1')
     
     parser.set_defaults(render_env=False)
     parser.set_defaults(use_gym_monitor=True)
