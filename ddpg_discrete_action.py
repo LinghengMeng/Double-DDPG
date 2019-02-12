@@ -472,43 +472,43 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='provide arguments for DDPG agent')
-    
-    # agent parameters
-    parser.add_argument('--actor-lr', help='actor network learning rate', default=0.0001)
-    parser.add_argument('--critic-lr', help='critic network learning rate', default=0.001)
-    parser.add_argument('--gamma', help='discount factor for critic updates', default=0.99)
-    parser.add_argument('--tau', help='soft target update parameter', default=0.001)
-    parser.add_argument('--buffer-size', help='max size of the replay buffer', default=1000000)
-    parser.add_argument('--minibatch-size', help='size of minibatch for minibatch-SGD', default=64)
-    parser.add_argument("--continuous-act-space-flag", type=bool, default=True)
 
-    parser.add_argument("--exploration-strategy", help='action_noise or epsilon_greedy', default='epsilon_greedy')
-    parser.add_argument("--epsilon-max", type=float, default=1.)
-    parser.add_argument("--epsilon-min", type=float, default=.01)
-    parser.add_argument("--epsilon-decay", type=float, default=.001)
+    # agent parameters
+    parser.add_argument('--actor-lr', type=float, default=0.0001, help='actor network learning rate')
+    parser.add_argument('--critic-lr', type=float, default=0.001, help='critic network learning rate')
+    parser.add_argument('--gamma', type=float, default=0.99, help='discount factor for critic updates')
+    parser.add_argument('--tau', type=float, default=0.001, help='soft target update parameter')
+    parser.add_argument('--buffer-size', type=int, default=1000000, help='max size of the replay buffer')
+    parser.add_argument('--minibatch-size', type=int, default=64, help='size of minibatch for minibatch-SGD')
+    parser.add_argument("--continuous-act-space-flag", action="store_true", help='act on continuous action space')
+
+    parser.add_argument("--exploration-strategy", type=str, default='epsilon_greedy', help='action_noise or epsilon_greedy')
+    parser.add_argument("--epsilon-max", type=float, default=1.0, help='maximum of epsilon')
+    parser.add_argument("--epsilon-min", type=float, default=.01, help='minimum of epsilon')
+    parser.add_argument("--epsilon-decay", type=float, default=.001, help='epsilon decay')
 
     # train parameters
-    parser.add_argument('--double-ddpg-flag', help='True, if run double-ddpg-flag. Otherwise, False.',type=bool, default=False)
-    parser.add_argument('--target-hard-copy-flag', help='Target network update method: hard copy',type=bool, default=False)
-    parser.add_argument('--target-hard-copy-interval', help='Target network update hard copy interval', default=200)
-    
+    parser.add_argument('--double-ddpg-flag', action="store_true", help='True, if run double-ddpg-flag. Otherwise, False.')
+    parser.add_argument('--target-hard-copy-flag', action="store_true", help='Target network update method: hard copy')
+    parser.add_argument('--target-hard-copy-interval', type=int, default=200, help='Target network update hard copy interval')
+
     # run parameters
     # HalfCheetah-v2, Ant-v2, InvertedPendulum-v2, Pendulum-v0
-    parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='HalfCheetah-v2')
-    parser.add_argument('--random-seed', help='random seed for repeatability', default=1234)
-    parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=50000)
-    parser.add_argument('--max-episode-len', help='max length of 1 episode', default=1000)
-    parser.add_argument('--render-env', help='render the gym env', type=bool, default=True)
-    parser.add_argument('--use-gym-monitor', help='record gym results', type=bool, default=False)
-    parser.add_argument('--monitor-dir', help='directory for storing gym results', default='./results/gym_ddpg')
-    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1')
+    parser.add_argument('--env', type=str, default='HalfCheetah-v2', help='choose the gym env- tested on {Pendulum-v0}')
+    parser.add_argument('--random-seed', type=int, default=1234, help='random seed for repeatability')
+    parser.add_argument('--max-episodes', type=int, default=50000, help='max num of episodes to do while training')
+    parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
+    parser.add_argument("--render-env-flag", action="store_true", help='render environment')
+    parser.add_argument("--use-gym-monitor-flag", action="store_true", help='record gym results')
+    parser.add_argument("--monitor-dir", type=str, default='./results/gym_ddpg', help='directory for storing gym results')
+    parser.add_argument("--summary-dir", type=str, default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
 
     parser.set_defaults(use_gym_monitor=False)
-    
+
     # args = vars(parser.parse_args())
     # args = parser.parse_args()
     args = vars(parser.parse_args())
-    
+
     pp.pprint(args)
 
     main(args)
