@@ -32,8 +32,9 @@ class ActorNetwork(object):
     between -action_bound and action_bound
     """
 
-    def __init__(self, sess, state_dim, action_dim, action_bound, learning_rate, tau, batch_size):
+    def __init__(self, sess, continuous_act_space_flag, state_dim, action_dim, action_bound, learning_rate, tau, batch_size):
         self.sess = sess
+        self.continuous_act_space_flag = continuous_act_space_flag
         self.s_dim = state_dim
         self.a_dim = action_dim
         self.action_bound = action_bound
@@ -84,8 +85,14 @@ class ActorNetwork(object):
         net = tflearn.activations.relu(net)
         # Final layer weights are init to Uniform[-3e-3, 3e-3]
         w_init = tflearn.initializations.uniform(minval=-0.003, maxval=0.003)
-        out = tflearn.fully_connected(
-            net, self.a_dim, activation='tanh', weights_init=w_init)
+
+        # If Actor acts on discrete action space, use Softmax
+        if self.continuous_act_space_flag is True:
+            out = tflearn.fully_connected(
+                net, self.a_dim, activation='tanh', weights_init=w_init)
+        else:
+            out = tflearn.fully_connected(
+                net, self.a_dim, activation='softmax', weights_init=w_init)
         # Scale output to -action_bound to action_bound
         scaled_out = tf.multiply(out, self.action_bound)
         return inputs, out, scaled_out
@@ -163,17 +170,40 @@ class CriticNetwork(object):
     def create_critic_network(self):
         inputs = tflearn.input_data(shape=[None, self.s_dim])
         action = tflearn.input_data(shape=[None, self.a_dim])
-        net = tflearn.fully_connected(inputs, 400)
-        net = tflearn.layers.normalization.batch_normalization(net)
-        net = tflearn.activations.relu(net)
+        # TODO
+        powerful_critic = True
+        if powerful_critic is True:
+            net = tflearn.fully_connected(inputs, 400)
+            net = tflearn.layers.normalization.batch_normalization(net)
+            net = tflearn.activations.relu(net)
 
-        # Add the action tensor in the 2nd hidden layer
-        # Use two temp layers to get the corresponding weights and biases
-        t1 = tflearn.fully_connected(net, 300)
-        t2 = tflearn.fully_connected(action, 300)
+            # Add the action tensor in the 2nd hidden layer
+            # Use two temp layers to get the corresponding weights and biases
+            t1 = tflearn.fully_connected(net, 300)
+            t2 = tflearn.fully_connected(action, 300)
 
-        net = tflearn.activation(
-            tf.matmul(net, t1.W) + tf.matmul(action, t2.W) + t2.b, activation='relu')
+            net = tflearn.activation(
+                tf.matmul(net, t1.W) + tf.matmul(action, t2.W) + t2.b, activation='relu')
+        else:
+            net = tflearn.fully_connected(inputs, 400)
+            net = tflearn.layers.normalization.batch_normalization(net)
+            net = tflearn.activations.relu(net)
+
+            # Add the action tensor in the 2nd hidden layer
+            # Use two temp layers to get the corresponding weights and biases
+            t1 = tflearn.fully_connected(net, 600)
+            t2 = tflearn.fully_connected(action, 600)
+
+            net = tflearn.activation(
+                tf.matmul(net, t1.W) + tf.matmul(action, t2.W) + t2.b, activation='relu')
+
+            # # Add the action tensor in the 2nd hidden layer
+            # # Use two temp layers to get the corresponding weights and biases
+            # t1 = tflearn.fully_connected(inputs, 300)
+            # t2 = tflearn.fully_connected(action, 300)
+            #
+            # net = tflearn.activation(
+            #     tf.matmul(inputs, t1.W) + tf.matmul(action, t2.W) + t2.b, activation='relu')
 
         # linear layer connected to 1 output representing Q(s,a)
         # Weights are init to Uniform[-3e-3, 3e-3]
@@ -209,7 +239,6 @@ class CriticNetwork(object):
     def update_target_network(self):
         self.sess.run(self.update_target_network_params)
         
-    
 
 # Taken from https://github.com/openai/baselines/blob/master/baselines/ddpg/noise.py, which is
 # based on http://math.stackexchange.com/questions/1287634/implementing-ornstein-uhlenbeck-in-matlab
@@ -253,7 +282,7 @@ def build_summaries():
 #   Agent Training
 # ===========================
 
-def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag, 
+def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
           target_hard_copy_flag, target_hard_copy_interval):
 
     # Set up summary Ops
@@ -266,8 +295,14 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
     actor.update_target_network()
     critic.update_target_network()
 
+    # Epsilon parameter
+    epsilon = args['epsilon_max']
+
     # Initialize replay memory
     replay_buffer = ReplayBuffer(int(args['buffer_size']), int(args['random_seed']))
+
+    # Time step
+    time_step = 0.
 
     # Needed to enable BatchNorm. 
     # This hurts the performance on Pendulum but could be useful
@@ -288,14 +323,41 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
 
             # Added exploration noise
             #a = actor.predict(np.reshape(s, (1, 3))) + (1. / (1. + i))
-            a = actor.predict(np.reshape(s, (1, actor.s_dim))) + actor_noise()
+            # TODO: different exploration strategy
+            a = []
+            action = []
+            exploration_strategy = args['exploration_strategy']
+            if exploration_strategy == 'action_noise':
+                a = actor.predict(np.reshape(s, (1, actor.s_dim))) + actor_noise()
+                # Convert continuous action into discrete action
+                if args['continuous_act_space_flag'] is True:
+                    action = a[0]
+                else:
+                    action = np.argmax(a[0])
+            elif exploration_strategy == 'epsilon_greedy':
+                if np.random.rand() < epsilon:
+                    if args['continuous_act_space_flag'] is True:
+                        a = np.reshape(env.action_space.sample(), (1, actor.a_dim))
+                    else:
+                        a = np.random.uniform(0, 1, (1, actor.a_dim))
+                else:
+                    a = actor.predict(np.reshape(s, (1, actor.s_dim)))
+                # Convert continuous action into discrete action
+                if args['continuous_act_space_flag'] is True:
+                    action = a[0]
+                else:
+                    action = np.argmax(a[0])
+            else:
+                print('Please choose a proper exploration strategy!')
 
-            # Convert continuous action into discrete action
-
-            s2, r, terminal, info = env.step(a[0])
+            s2, r, terminal, info = env.step(action)
 
             replay_buffer.add(np.reshape(s, (actor.s_dim,)), np.reshape(a, (actor.a_dim,)), r,
                               terminal, np.reshape(s2, (actor.s_dim,)))
+
+            # Reduce epsilon
+            time_step += 1.
+            epsilon = args['epsilon_min'] + (args['epsilon_max'] - args['epsilon_min']) * np.exp(-args['epsilon_decay'] * time_step)
 
             # Keep adding experience to the memory until
             # there are at least minibatch size samples
@@ -369,15 +431,23 @@ def main(args):
         env.seed(int(args['random_seed']))
 
         state_dim = env.observation_space.shape[0]
-        action_dim = env.action_space.shape[0]
-        action_bound = env.action_space.high
-        # Ensure action bound is symmetric
-        assert (env.action_space.high == -env.action_space.low).all()
-        
-        if args['target_hard_copy_flag'] == True:
+        # Set action_dim for continuous and discrete action space
+        if args['continuous_act_space_flag'] is True:
+            action_dim = env.action_space.shape[0]
+            action_bound = env.action_space.high
+            # Ensure action bound is symmetric
+            assert (env.action_space.high == -env.action_space.low).all()
+        else:
+            action_dim = env.action_space.n
+            # If discrete action, actor uses Softmax and action_bound is always 1
+            action_bound = 1
+
+        # Use hardcopy way to update target NNs.
+        if args['target_hard_copy_flag'] is True:
             args['tau'] = 1.0
 
-        actor = ActorNetwork(sess, state_dim, action_dim, action_bound,
+        actor = ActorNetwork(sess, args['continuous_act_space_flag'],
+                             state_dim, action_dim, action_bound,
                              float(args['actor_lr']), float(args['tau']),
                              int(args['minibatch_size']))
 
@@ -410,10 +480,16 @@ if __name__ == '__main__':
     parser.add_argument('--tau', help='soft target update parameter', default=0.001)
     parser.add_argument('--buffer-size', help='max size of the replay buffer', default=1000000)
     parser.add_argument('--minibatch-size', help='size of minibatch for minibatch-SGD', default=64)
-    
+    parser.add_argument("--continuous-act-space-flag", type=bool, default=True)
+
+    parser.add_argument("--exploration-strategy", help='action_noise or epsilon_greedy', default='epsilon_greedy')
+    parser.add_argument("--epsilon-max", type=float, default=1.)
+    parser.add_argument("--epsilon-min", type=float, default=.01)
+    parser.add_argument("--epsilon-decay", type=float, default=.001)
+
     # train parameters
-    parser.add_argument('--double-ddpg-flag', help='True, if run double-ddpg-flag. Otherwise, False.', default=False)
-    parser.add_argument('--target-hard-copy-flag', help='Target network update method: hard copy', default=False)
+    parser.add_argument('--double-ddpg-flag', help='True, if run double-ddpg-flag. Otherwise, False.',type=bool, default=False)
+    parser.add_argument('--target-hard-copy-flag', help='Target network update method: hard copy',type=bool, default=False)
     parser.add_argument('--target-hard-copy-interval', help='Target network update hard copy interval', default=200)
     
     # run parameters
@@ -422,16 +498,19 @@ if __name__ == '__main__':
     parser.add_argument('--random-seed', help='random seed for repeatability', default=1234)
     parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=50000)
     parser.add_argument('--max-episode-len', help='max length of 1 episode', default=1000)
-    parser.add_argument('--render-env', help='render the gym env', action='store_true')
-    parser.add_argument('--use-gym-monitor', help='record gym results', action='store_true')
+    parser.add_argument('--render-env', help='render the gym env', type=bool, default=True)
+    parser.add_argument('--use-gym-monitor', help='record gym results', type=bool, default=False)
     parser.add_argument('--monitor-dir', help='directory for storing gym results', default='./results/gym_ddpg')
-    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0_001_run1')
-    
-    parser.set_defaults(render_env=True)
+    parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1')
+
     parser.set_defaults(use_gym_monitor=False)
     
+    # args = vars(parser.parse_args())
+    # args = parser.parse_args()
     args = vars(parser.parse_args())
     
     pp.pprint(args)
 
     main(args)
+
+    # python ddpg_discrete_action.py --env
