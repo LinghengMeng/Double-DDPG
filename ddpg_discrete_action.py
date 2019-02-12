@@ -318,7 +318,7 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
 
         for j in range(int(args['max_episode_len'])):
 
-            if args['render_env']:
+            if args['render_env_flag']:
                 env.render()
 
             # Added exploration noise
