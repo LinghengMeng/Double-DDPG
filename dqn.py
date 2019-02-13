@@ -103,26 +103,7 @@ def build_summaries():
 # ===========================
 #   Agent Training
 # ===========================
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--env", type=str, default='CartPole-v0')
-    parser.add_argument("--render-env", type=bool, default=False)
-    parser.add_argument("--action-size", type=int, default=2)
-    parser.add_argument("--input-shape", type=list, default=[None, 4])
-    parser.add_argument("--target-update-freq", type=int, default=200)
-    parser.add_argument("--epsilon-max", type=float, default=1.)
-    parser.add_argument("--epsilon-min", type=float, default=.01)
-    parser.add_argument("--epsilon-decay", type=float, default=.001)
-    parser.add_argument('--summary-dir', help='directory for storing tensorboard info',
-                        default='./results/dqn/CartPole-v0/run1')
-
-    parser.add_argument("--discount-factor", type=float, default=.99)
-    parser.add_argument("--batch-size", type=int, default=64)
-    parser.add_argument("--epochs", type=int, default=5000)
-
-    parser.add_argument("--replay-mem-size", type=int, default=1000000)
-    args = parser.parse_args()
-    pp.pprint(args)
+def main(args):
 
     env = gym.make(args.env)
     args.action_size = env.action_space.n
@@ -149,12 +130,12 @@ def main():
         sess.run(tf.global_variables_initializer())
         writer = tf.summary.FileWriter(args.summary_dir, sess.graph)
 
-        for epoch in range(args.epochs):
-            total_reward = 0
+        for epoch in range(args.max_episodes):
+            ep_reward = 0
             ep_ave_max_q = 0
-            step_count = 0
+            ep_steps = 0
             state = env.reset()
-            while True:
+            for j in range(int(args.max_episode_len)):
                 if args.render_env:
                     env.render()
 
@@ -164,8 +145,8 @@ def main():
                     action = qnet.act(sess, state)
 
                 next_state, reward, done, _ = env.step(action)
-                total_reward += reward
-                step_count += 1
+                ep_reward += reward
+                ep_steps += 1
 
                 # Add to memory
                 memory.add([state, action, reward, next_state, done])
@@ -185,22 +166,48 @@ def main():
                 if int(time_step) % args.target_update_freq == 0:
                     sess.run(update_ops)
 
-                if done:
+                ep_steps = j
+
+                # if terminal or reach maximum length
+                if done or (ep_steps + 1) == int(args['max_episode_len']):
                     summary_str = sess.run(summary_ops, feed_dict={
-                        summary_vars[0]: total_reward,
-                        summary_vars[1]: ep_ave_max_q / float(step_count)
+                        summary_vars[0]: ep_reward,
+                        summary_vars[1]: ep_ave_max_q / float((ep_steps + 1))
                     })
 
                     writer.add_summary(summary_str, epoch)
                     writer.flush()
 
-                    print('| Reward: {0:.4f} | Episode: {1:.1f} | Qmax: {2:.4f}'.format(total_reward,
-                                                                                    epoch,
-                                                                                    (ep_ave_max_q / float(step_count))))
+                    print('| Episode: {0} | Steps: {1} | Reward: {2:.4f} | Qmax: {3:.4f}'.format(epoch,
+                                                                                                 (ep_steps + 1),
+                                                                                                 ep_reward,
+                                                                                                 (ep_ave_max_q / float( ep_steps + 1))))
                     break
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--env", type=str, default='CartPole-v0')
+    parser.add_argument("--render-env", action="store_true")
+    parser.add_argument("--action-size", type=int, default=2)
+    parser.add_argument("--input-shape", type=list, default=[None, 4])
+    parser.add_argument("--target-update-freq", type=int, default=200)
+    parser.add_argument("--epsilon-max", type=float, default=1.)
+    parser.add_argument("--epsilon-min", type=float, default=.01)
+    parser.add_argument("--epsilon-decay", type=float, default=.001)
+    parser.add_argument('--summary-dir', help='directory for storing tensorboard info',
+                        default='./results/dqn/CartPole-v0/run1')
+
+    parser.add_argument("--discount-factor", type=float, default=.99)
+    parser.add_argument("--batch-size", type=int, default=64)
+    parser.add_argument('--max-episodes', type=int, default=50000, help='max num of episodes to do while training')
+    parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
+
+    parser.add_argument("--replay-mem-size", type=int, default=1000000)
+    args = parser.parse_args()
+    pp.pprint(args)
+
+    main(args)
 
     # python dqn.py --env CartPole-v1 --summary-dir ./results/dqn/CartPole-v1/run1 --render-env True
     # python dqn.py --env Acrobot-v1 --summary-dir ./results/dqn/Acrobot-v1/run1 --render-env True

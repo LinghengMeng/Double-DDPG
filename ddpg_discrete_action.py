@@ -9,6 +9,7 @@ and developed with tflearn + Tensorflow
 
 Author: Patrick Emami
 """
+import os
 import tensorflow as tf
 import numpy as np
 import gym
@@ -315,6 +316,7 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
 
         ep_reward = 0
         ep_ave_max_q = 0
+        ep_steps = 0
 
         for j in range(int(args['max_episode_len'])):
 
@@ -405,20 +407,22 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
 
             s = s2
             ep_reward += r
-            #print('reward:{}'.format(r))
+            ep_steps = j
 
-            if terminal:
-
+            # if terminal or reach maximum length
+            if terminal or (ep_steps+1) == int(args['max_episode_len']):
                 summary_str = sess.run(summary_ops, feed_dict={
                     summary_vars[0]: ep_reward,
-                    summary_vars[1]: ep_ave_max_q / float(j)
+                    summary_vars[1]: ep_ave_max_q / float((ep_steps + 1))
                 })
 
                 writer.add_summary(summary_str, i)
                 writer.flush()
 
-                print('| Reward: {:d} | Episode: {:d} | Qmax: {:.4f}'.format(int(ep_reward), \
-                        i, (ep_ave_max_q / float(j))))
+                print('| Episode: {0} | Steps: {1} | Reward: {2:.4f} | Qmax: {3:.4f}'.format(i,
+                                                                                             (ep_steps + 1),
+                                                                                             ep_reward,
+                                                                                             (ep_ave_max_q / float(ep_steps+1))))
                 break
 
 def main(args):
@@ -457,18 +461,22 @@ def main(args):
                                actor.get_num_trainable_vars())
         
         actor_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(action_dim))
-        
-        if args['use_gym_monitor']:
-            if not args['render_env']:
-                env = wrappers.Monitor(
-                    env, args['monitor_dir'], video_callable=False, force=True)
-            else:
-                env = wrappers.Monitor(env, args['monitor_dir'], force=True)
+
+        # Record videos
+        # Use the gym env Monitor wrapper
+        if args['use_gym_monitor_flag']:
+            monitor_dir = os.path.join(args['summary_dir'], 'gym_monitor')
+            env = wrappers.Monitor(env, monitor_dir,
+                                   resume=True,
+                                   video_callable=lambda count: count % args['record_video_every'] == 0)
 
         train(sess, env, args, actor, critic, actor_noise, args['double_ddpg_flag'], 
               args['target_hard_copy_flag'], args['target_hard_copy_interval'])
 
-        env.close()
+        if args['use_gym_monitor_flag']:
+            env.monitor.close()
+        else:
+            env.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='provide arguments for DDPG agent')
@@ -482,7 +490,8 @@ if __name__ == '__main__':
     parser.add_argument('--minibatch-size', type=int, default=64, help='size of minibatch for minibatch-SGD')
     parser.add_argument("--continuous-act-space-flag", action="store_true", help='act on continuous action space')
 
-    parser.add_argument("--exploration-strategy", type=str, default='epsilon_greedy', help='action_noise or epsilon_greedy')
+    parser.add_argument("--exploration-strategy", type=str, choices=["action_noise", "epsilon_greedy"],
+                        default='epsilon_greedy', help='action_noise or epsilon_greedy')
     parser.add_argument("--epsilon-max", type=float, default=1.0, help='maximum of epsilon')
     parser.add_argument("--epsilon-min", type=float, default=.01, help='minimum of epsilon')
     parser.add_argument("--epsilon-decay", type=float, default=.001, help='epsilon decay')
@@ -500,8 +509,10 @@ if __name__ == '__main__':
     parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
     parser.add_argument("--render-env-flag", action="store_true", help='render environment')
     parser.add_argument("--use-gym-monitor-flag", action="store_true", help='record gym results')
+    parser.add_argument("--record-video-every", type=int, default=1, help='record video every xx episodes')
     parser.add_argument("--monitor-dir", type=str, default='./results/gym_ddpg', help='directory for storing gym results')
     parser.add_argument("--summary-dir", type=str, default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
+
 
     parser.set_defaults(use_gym_monitor=False)
 

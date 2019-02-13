@@ -1,0 +1,1014 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Gym Tasks}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{gym}
+\end{Verbatim}
+
+
+    \section{MuJoCo}\label{mujoco}
+
+Continuous control tasks, running in a fast physics simulator.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Ant-v2}
+\item
+  observation\_space: \textbf{Box(111,)}
+\item
+  action\_space: \textbf{Box(8,)}
+\item
+  \textbf{HalfCheetah-v2}
+\item
+  observation\_space: \textbf{Box(17,)}
+\item
+  action\_space: \textbf{Box(6,)}
+\item
+  \textbf{Hopper-v2}
+\item
+  observation\_space:\textbf{Box(11,)}
+\item
+  action\_space: \textbf{Box(3,)}
+\item
+  \textbf{Humanoid-v2}
+\item
+  observation\_space: \textbf{Box(376,)}
+\item
+  action\_space: \textbf{Box(17,)}
+\item
+  \textbf{HumanoidStandup-v2}
+\item
+  observation\_space: \textbf{Box(376,)}
+\item
+  action\_space: \textbf{Box(17,)}
+\item
+  \textbf{InvertedDoublePendulum-v2}
+\item
+  observation\_space: \textbf{Box(11,)}
+\item
+  action\_space: \textbf{Box(1,)}
+\item
+  \textbf{InvertedPendulum-v2}
+\item
+  observation\_space: \textbf{Box(4,)}
+\item
+  action\_space: \textbf{Box(1,)}
+\item
+  \textbf{Reacher-v2}
+\item
+  observation\_space: \textbf{Box(11,)}
+\item
+  action\_space: \textbf{Box(2,)}
+\item
+  \textbf{Swimmer-v2}
+\item
+  observation\_space: \textbf{Box(8,)}
+\item
+  action\_space: \textbf{Box(2,)}
+\item
+  \textbf{Walker2d-v2}
+\item
+  observation\_space: \textbf{Box(17,)}
+\item
+  action\_space: \textbf{Box(6,)}
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{MuJoCo\PYZus{}env\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ant\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{HalfCheetah\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hopper\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Humanoid\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                            \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{HumanoidStandup\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{InvertedDoublePendulum\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{InvertedPendulum\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Reacher\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                            \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Swimmer\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Walker2d\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{k}{for} \PY{n}{env\PYZus{}name} \PY{o+ow}{in} \PY{n}{MuJoCo\PYZus{}env\PYZus{}names}\PY{p}{:}
+            \PY{n}{env} \PY{o}{=} \PY{n}{gym}\PY{o}{.}\PY{n}{make}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Environment: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{observation\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{observation\PYZus{}space}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{action\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Ant-v2
+observation\_space: Box(111,)
+action\_space: Box(8,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: HalfCheetah-v2
+observation\_space: Box(17,)
+action\_space: Box(6,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Hopper-v2
+observation\_space: Box(11,)
+action\_space: Box(3,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Humanoid-v2
+observation\_space: Box(376,)
+action\_space: Box(17,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: HumanoidStandup-v2
+observation\_space: Box(376,)
+action\_space: Box(17,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: InvertedDoublePendulum-v2
+observation\_space: Box(11,)
+action\_space: Box(1,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: InvertedPendulum-v2
+observation\_space: Box(4,)
+action\_space: Box(1,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Reacher-v2
+observation\_space: Box(11,)
+action\_space: Box(2,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Swimmer-v2
+observation\_space: Box(8,)
+action\_space: Box(2,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Walker2d-v2
+observation\_space: Box(17,)
+action\_space: Box(6,)
+
+    \end{Verbatim}
+
+    \section{Box2D}\label{box2d}
+
+Continuous control tasks in the Box2D simulator.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{Box2D\PYZus{}env\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BipedalWalker\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BipedalWalkerHardcore\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CarRacing\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{LunarLander\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{LunarLanderContinuous\PYZhy{}v2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{k}{for} \PY{n}{env\PYZus{}name} \PY{o+ow}{in} \PY{n}{Box2D\PYZus{}env\PYZus{}names}\PY{p}{:}
+            \PY{n}{env} \PY{o}{=} \PY{n}{gym}\PY{o}{.}\PY{n}{make}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Environment: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{observation\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{observation\PYZus{}space}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{action\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: BipedalWalker-v2
+observation\_space: Box(24,)
+action\_space: Box(4,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: BipedalWalkerHardcore-v2
+observation\_space: Box(24,)
+action\_space: Box(4,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: CarRacing-v0
+observation\_space: Box(96, 96, 3)
+action\_space: Box(3,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: LunarLander-v2
+observation\_space: Box(8,)
+action\_space: Discrete(4)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: LunarLanderContinuous-v2
+observation\_space: Box(8,)
+action\_space: Box(2,)
+
+    \end{Verbatim}
+
+    \section{Atari}\label{atari}
+
+Reach high scores in Atari 2600 games.
+
+all actions are discrete.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{Atari\PYZus{}env\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AirRaid\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{AirRaid\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Alien\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Alien\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Amidar\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Amidar\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Assault\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Assault\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Asterix\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Asterix\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Asteroids\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Asteroids\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Atlantis\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Atlantis\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BankHeist\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BankHeist\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BattleZone\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BattleZone\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BeamRider\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{BeamRider\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Berzerk\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Berzerk\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bowling\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bowling\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Boxing\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Boxing\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Breakout\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Breakout\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Carnival\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Carnival\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Centipede\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Centipede\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ChopperCommand\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ChopperCommand\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CrazyClimber\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CrazyClimber\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DemonAttack\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DemonAttack\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DoubleDunk\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DoubleDunk\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ElevatorAction\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ElevatorAction\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Enduro\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Enduro\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{FishingDerby\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{FishingDerby\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Freeway\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Freeway\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Frostbite\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Frostbite\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gopher\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gopher\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gravitar\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gravitar\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{IceHockey\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{IceHockey\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jamesbond\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jamesbond\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{JourneyEscape\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{JourneyEscape\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Kangaroo\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Kangaroo\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Krull\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Krull\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{KungFuMaster\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{KungFuMaster\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MontezumaRevenge\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MontezumaRevenge\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MsPacman\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MsPacman\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{NameThisGame\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{NameThisGame\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phoenix\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Phoenix\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pitfall\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pitfall\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pong\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pong\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pooyan\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pooyan\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PrivateEye\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PrivateEye\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Qbert\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Qbert\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Riverraid\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Riverraid\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RoadRunner\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RoadRunner\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Robotank\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Robotank\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Seaquest\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Seaquest\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Skiing\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Skiing\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solaris\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solaris\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SpaceInvaders\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SpaceInvaders\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{StarGunner\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{StarGunner\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tennis\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tennis\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{TimePilot\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{TimePilot\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tutankham\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tutankham\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{UpNDown\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{UpNDown\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Venture\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Venture\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{VideoPinball\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{VideoPinball\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{WizardOfWor\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{WizardOfWor\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YarsRevenge\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YarsRevenge\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Zaxxon\PYZhy{}ram\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Zaxxon\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{k}{for} \PY{n}{env\PYZus{}name} \PY{o+ow}{in} \PY{n}{Atari\PYZus{}env\PYZus{}names}\PY{p}{:}
+            \PY{n}{env} \PY{o}{=} \PY{n}{gym}\PY{o}{.}\PY{n}{make}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Environment: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{observation\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{observation\PYZus{}space}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{action\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Environment: AirRaid-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: AirRaid-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(6)
+Environment: Alien-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Alien-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Amidar-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(10)
+Environment: Amidar-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(10)
+Environment: Assault-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(7)
+Environment: Assault-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(7)
+Environment: Asterix-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: Asterix-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(9)
+Environment: Asteroids-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(14)
+Environment: Asteroids-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(14)
+Environment: Atlantis-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(4)
+Environment: Atlantis-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(4)
+Environment: BankHeist-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: BankHeist-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(18)
+Environment: BattleZone-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: BattleZone-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: BeamRider-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: BeamRider-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(9)
+Environment: Berzerk-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Berzerk-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Bowling-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: Bowling-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: Boxing-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Boxing-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Breakout-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(4)
+Environment: Breakout-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(4)
+Environment: Carnival-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: Carnival-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(6)
+Environment: Centipede-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Centipede-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(18)
+Environment: ChopperCommand-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: ChopperCommand-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: CrazyClimber-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: CrazyClimber-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(9)
+Environment: DemonAttack-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: DemonAttack-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: DoubleDunk-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: DoubleDunk-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(18)
+Environment: ElevatorAction-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: ElevatorAction-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Enduro-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: Enduro-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(9)
+Environment: FishingDerby-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: FishingDerby-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Freeway-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(3)
+Environment: Freeway-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(3)
+Environment: Frostbite-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Frostbite-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Gopher-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(8)
+Environment: Gopher-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(8)
+Environment: Gravitar-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Gravitar-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: IceHockey-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: IceHockey-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Jamesbond-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Jamesbond-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: JourneyEscape-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(16)
+Environment: JourneyEscape-v0
+observation\_space: Box(230, 160, 3)
+action\_space: Discrete(16)
+Environment: Kangaroo-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Kangaroo-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Krull-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Krull-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: KungFuMaster-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(14)
+Environment: KungFuMaster-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(14)
+Environment: MontezumaRevenge-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: MontezumaRevenge-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: MsPacman-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: MsPacman-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(9)
+Environment: NameThisGame-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: NameThisGame-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: Phoenix-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(8)
+Environment: Phoenix-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(8)
+Environment: Pitfall-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Pitfall-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Pong-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: Pong-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: Pooyan-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: Pooyan-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(6)
+Environment: PrivateEye-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: PrivateEye-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Qbert-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: Qbert-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: Riverraid-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Riverraid-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: RoadRunner-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: RoadRunner-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Robotank-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Robotank-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Seaquest-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Seaquest-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Skiing-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(3)
+Environment: Skiing-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(3)
+Environment: Solaris-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Solaris-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: SpaceInvaders-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: SpaceInvaders-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: StarGunner-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: StarGunner-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Tennis-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Tennis-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(18)
+Environment: TimePilot-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(10)
+Environment: TimePilot-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(10)
+Environment: Tutankham-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(8)
+Environment: Tutankham-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(8)
+Environment: UpNDown-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(6)
+Environment: UpNDown-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(6)
+Environment: Venture-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Venture-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: VideoPinball-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(9)
+Environment: VideoPinball-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(9)
+Environment: WizardOfWor-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(10)
+Environment: WizardOfWor-v0
+observation\_space: Box(250, 160, 3)
+action\_space: Discrete(10)
+Environment: YarsRevenge-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: YarsRevenge-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+Environment: Zaxxon-ram-v0
+observation\_space: Box(128,)
+action\_space: Discrete(18)
+Environment: Zaxxon-v0
+observation\_space: Box(210, 160, 3)
+action\_space: Discrete(18)
+
+    \end{Verbatim}
+
+    \section{Classic control}\label{classic-control}
+
+Control theory problems from the classic RL literature.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Acrobot-v1}:
+\item
+  observation\_space: \textbf{Box(6,)}
+\item
+  action\_space: \textbf{Discrete(3)}
+\item
+  \textbf{CartPole-v1}:
+\item
+  observation\_space: \textbf{Box(4,)}
+\item
+  action\_space: \textbf{Discrete(2)}
+\item
+  \textbf{MountainCar-v0}:
+\item
+  observation\_space: \textbf{Box(2,)}
+\item
+  action\_space: \textbf{Discrete(3)}
+\item
+  \textbf{MountainCarContinuous-v0}:
+\item
+  observation\_space: \textbf{Box(2,)}
+\item
+  action\_space: \textbf{Box(1,)}
+\item
+  \textbf{Pendulum-v0}:
+\item
+  observation\_space: \textbf{Box(3,)}
+\item
+  action\_space: \textbf{Box(1,)}
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{Classic\PYZus{}control\PYZus{}env\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Acrobot\PYZhy{}v1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CartPole\PYZhy{}v1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MountainCar\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                                     \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MountainCarContinuous\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pendulum\PYZhy{}v0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{k}{for} \PY{n}{env\PYZus{}name} \PY{o+ow}{in} \PY{n}{Classic\PYZus{}control\PYZus{}env\PYZus{}names}\PY{p}{:}
+            \PY{n}{env} \PY{o}{=} \PY{n}{gym}\PY{o}{.}\PY{n}{make}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Environment: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{observation\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{observation\PYZus{}space}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{action\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Acrobot-v1
+observation\_space: Box(6,)
+action\_space: Discrete(3)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: CartPole-v1
+observation\_space: Box(4,)
+action\_space: Discrete(2)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: MountainCar-v0
+observation\_space: Box(2,)
+action\_space: Discrete(3)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: MountainCarContinuous-v0
+observation\_space: Box(2,)
+action\_space: Box(1,)
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: Pendulum-v0
+observation\_space: Box(3,)
+action\_space: Box(1,)
+
+    \end{Verbatim}
+
+    \section{Test}\label{test}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{c+c1}{\PYZsh{} env\PYZus{}name = \PYZsq{}Ant\PYZhy{}v2\PYZsq{}}
+         \PY{n}{env\PYZus{}name} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{CartPole\PYZhy{}v1}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{env} \PY{o}{=} \PY{n}{gym}\PY{o}{.}\PY{n}{make}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Environment: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env\PYZus{}name}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{observation\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{observation\PYZus{}space}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{action\PYZus{}space: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+\textcolor{ansi-yellow}{WARN: gym.spaces.Box autodetected dtype as <class 'numpy.float32'>. Please provide explicit dtype.}
+Environment: CartPole-v1
+observation\_space: Box(4,)
+action\_space: Discrete(2)
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{k+kn}{from} \PY{n+nn}{gym} \PY{k}{import} \PY{n}{envs}
+         \PY{n+nb}{len}\PY{p}{(}\PY{n}{envs}\PY{o}{.}\PY{n}{registry}\PY{o}{.}\PY{n}{all}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}22}]:} 797
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{env}\PY{o}{.}\PY{n}{action\PYZus{}space}\PY{o}{.}\PY{n}{n}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} 2
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{env}\PY{o}{.}\PY{n}{reset}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}26}]:} array([-0.03608102, -0.02090231, -0.0122349 ,  0.01182794])
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{env}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}27}]:} (array([-0.03649906, -0.21584668, -0.01199834,  0.30062564]), 1.0, False, \{\})
+\end{Verbatim}
+            
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

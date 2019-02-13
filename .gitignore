@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+results/BipedalWalker-v2/ddpg_hardcopy_epsilon_greedy_run1/Icon
+results/BipedalWalker-v2/ddpg_hardcopy_epsilon_greedy_run1/Icon
+*.ca
+*.json
+*.mp4
+*.json
