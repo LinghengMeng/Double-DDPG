@@ -318,7 +318,7 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
         ep_ave_max_q = 0
         ep_steps = 0
 
-        for j in range(int(args['max_episode_len'])):
+        while True:
 
             if args['render_env_flag']:
                 env.render()
@@ -407,10 +407,10 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
 
             s = s2
             ep_reward += r
-            ep_steps = j
+            ep_steps += 1
 
             # if terminal or reach maximum length
-            if terminal or (ep_steps+1) == int(args['max_episode_len']):
+            if terminal:
                 summary_str = sess.run(summary_ops, feed_dict={
                     summary_vars[0]: ep_reward,
                     summary_vars[1]: ep_ave_max_q / float((ep_steps + 1))
@@ -430,6 +430,7 @@ def main(args):
     with tf.Session() as sess:
 
         env = gym.make(args['env'])
+
         np.random.seed(int(args['random_seed']))
         tf.set_random_seed(int(args['random_seed']))
         env.seed(int(args['random_seed']))
@@ -506,7 +507,7 @@ if __name__ == '__main__':
     parser.add_argument('--env', type=str, default='HalfCheetah-v2', help='choose the gym env- tested on {Pendulum-v0}')
     parser.add_argument('--random-seed', type=int, default=1234, help='random seed for repeatability')
     parser.add_argument('--max-episodes', type=int, default=50000, help='max num of episodes to do while training')
-    parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
+    # parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
     parser.add_argument("--render-env-flag", action="store_true", help='render environment')
     parser.add_argument("--use-gym-monitor-flag", action="store_true", help='record gym results')
     parser.add_argument("--record-video-every", type=int, default=1, help='record video every xx episodes')

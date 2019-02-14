@@ -135,7 +135,7 @@ def main(args):
             ep_ave_max_q = 0
             ep_steps = 0
             state = env.reset()
-            for j in range(int(args.max_episode_len)):
+            while True:
                 if args.render_env:
                     env.render()
 
@@ -166,10 +166,10 @@ def main(args):
                 if int(time_step) % args.target_update_freq == 0:
                     sess.run(update_ops)
 
-                ep_steps = j
+                ep_steps += 1
 
                 # if terminal or reach maximum length
-                if done or (ep_steps + 1) == int(args['max_episode_len']):
+                if done:
                     summary_str = sess.run(summary_ops, feed_dict={
                         summary_vars[0]: ep_reward,
                         summary_vars[1]: ep_ave_max_q / float((ep_steps + 1))
