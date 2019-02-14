@@ -20,11 +20,6 @@ import pprint as pp
 
 from replay_buffer import ReplayBuffer
 
-# Virtual display
-from pyvirtualdisplay import Display
-
-virtual_display = Display(visible=0, size=(1400, 900))
-virtual_display.start()
 
 # ===========================
 #   Actor and Critic DNNs
