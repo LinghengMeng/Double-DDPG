@@ -20,6 +20,7 @@ import pprint as pp
 
 from replay_buffer import ReplayBuffer
 
+import logging
 
 # ===========================
 #   Actor and Critic DNNs
@@ -419,10 +420,12 @@ def train(sess, env, args, actor, critic, actor_noise):
                 writer.add_summary(summary_str, i)
                 writer.flush()
 
-                print('| Episode: {0} | Steps: {1} | Reward: {2:.4f} | Qmax: {3:.4f}'.format(i,
+                ep_stats = '| Episode: {0} | Steps: {1} | Reward: {2:.4f} | Qmax: {3:.4f}'.format(i,
                                                                                              (ep_steps + 1),
                                                                                              ep_reward,
-                                                                                             (ep_ave_max_q / float(ep_steps+1))))
+                                                                                             (ep_ave_max_q / float(ep_steps+1)))
+                print(ep_stats)
+                logging.info(ep_stats)
                 break
 
 def main(args):
@@ -521,6 +524,13 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     pp.pprint(args)
+
+    if not os.path.exists(args['summary_dir']):
+        os.makedirs(args['summary_dir'])
+    log_dir = os.path.join(args['summary_dir'], 'ddpg_running_log.log')
+    logging.basicConfig(filename=log_dir, filemode='a', level=logging.INFO)
+    for key in args.keys():
+        logging.info('{0}: {1}'.format(key, args[key]))
 
     main(args)
 
