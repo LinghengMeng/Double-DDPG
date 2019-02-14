@@ -274,7 +274,7 @@ def build_summaries():
     episode_reward = tf.Variable(0.)
     tf.summary.scalar("Reward", episode_reward)
     episode_ave_max_q = tf.Variable(0.)
-    tf.summary.scalar("Qmax Value", episode_ave_max_q)
+    tf.summary.scalar("Qmax_Value", episode_ave_max_q)
 
     summary_vars = [episode_reward, episode_ave_max_q]
     summary_ops = tf.summary.merge_all()
@@ -513,7 +513,7 @@ if __name__ == '__main__':
     parser.add_argument("--render-env-flag", action="store_true", help='render environment')
     parser.add_argument("--use-gym-monitor-flag", action="store_true", help='record gym results')
     parser.add_argument("--record-video-every", type=int, default=1, help='record video every xx episodes')
-    parser.add_argument("--summary-dir", type=str, default='../results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
+    parser.add_argument("--summary-dir", type=str, default='../Double_DDPG_results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
 
 
     parser.set_defaults(use_gym_monitor=False)
