@@ -20,6 +20,12 @@ import pprint as pp
 
 from replay_buffer import ReplayBuffer
 
+# Virtual display
+from pyvirtualdisplay import Display
+
+virtual_display = Display(visible=0, size=(1400, 900))
+virtual_display.start()
+
 # ===========================
 #   Actor and Critic DNNs
 # ===========================
@@ -283,8 +289,7 @@ def build_summaries():
 #   Agent Training
 # ===========================
 
-def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
-          target_hard_copy_flag, target_hard_copy_interval):
+def train(sess, env, args, actor, critic, actor_noise):
 
     # Set up summary Ops
     summary_ops, summary_vars = build_summaries()
@@ -367,7 +372,7 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
                 s_batch, a_batch, r_batch, t_batch, s2_batch = \
                     replay_buffer.sample_batch(int(args['minibatch_size']))
 
-                if D_DDPG_flag == True:
+                if args['double_ddpg_flag']:
                     # Calculate targets: Double DDPG
                     target_q = critic.predict_target(
                             s2_batch, actor.predict(s2_batch))
@@ -397,8 +402,8 @@ def train(sess, env, args, actor, critic, actor_noise, D_DDPG_flag,
                 actor.train(s_batch, grads[0])
                 
                 # Update target networks
-                if target_hard_copy_flag == True:
-                    if j % target_hard_copy_interval == 0:
+                if args['target_hard_copy_flag']:
+                    if ep_steps % args['target_hard_copy_interval'] == 0:
                         actor.update_target_network()
                         critic.update_target_network()
                 else:
@@ -471,8 +476,7 @@ def main(args):
                                    resume=True,
                                    video_callable=lambda count: count % args['record_video_every'] == 0)
 
-        train(sess, env, args, actor, critic, actor_noise, args['double_ddpg_flag'], 
-              args['target_hard_copy_flag'], args['target_hard_copy_interval'])
+        train(sess, env, args, actor, critic, actor_noise)
 
         if args['use_gym_monitor_flag']:
             env.monitor.close()
