@@ -274,7 +274,7 @@ def build_summaries():
     episode_reward = tf.Variable(0.)
     tf.summary.scalar("Reward", episode_reward)
     episode_ave_max_q = tf.Variable(0.)
-    tf.summary.scalar("Qmax Value", episode_ave_max_q)
+    tf.summary.scalar("Qmax_Value", episode_ave_max_q)
 
     summary_vars = [episode_reward, episode_ave_max_q]
     summary_ops = tf.summary.merge_all()
@@ -508,13 +508,12 @@ if __name__ == '__main__':
     # HalfCheetah-v2, Ant-v2, InvertedPendulum-v2, Pendulum-v0
     parser.add_argument('--env', type=str, default='HalfCheetah-v2', help='choose the gym env- tested on {Pendulum-v0}')
     parser.add_argument('--random-seed', type=int, default=1234, help='random seed for repeatability')
-    parser.add_argument('--max-episodes', type=int, default=50000, help='max num of episodes to do while training')
+    parser.add_argument('--max-episodes', type=int, default=5000, help='max num of episodes to do while training')
     # parser.add_argument("--max-episode-len", type=int, default=1000, help='max length of 1 episode')
     parser.add_argument("--render-env-flag", action="store_true", help='render environment')
     parser.add_argument("--use-gym-monitor-flag", action="store_true", help='record gym results')
     parser.add_argument("--record-video-every", type=int, default=1, help='record video every xx episodes')
-    parser.add_argument("--monitor-dir", type=str, default='./results/gym_ddpg', help='directory for storing gym results')
-    parser.add_argument("--summary-dir", type=str, default='./results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
+    parser.add_argument("--summary-dir", type=str, default='../Double_DDPG_results/tf_ddpg/HalfCheetah-v2/ddpg_Tau_0.001_run1', help='directory for storing tensorboard info')
 
 
     parser.set_defaults(use_gym_monitor=False)
@@ -528,7 +527,11 @@ if __name__ == '__main__':
     if not os.path.exists(args['summary_dir']):
         os.makedirs(args['summary_dir'])
     log_dir = os.path.join(args['summary_dir'], 'ddpg_running_log.log')
-    logging.basicConfig(filename=log_dir, filemode='a', level=logging.INFO)
+    logging.basicConfig(filename=log_dir,
+                        filemode='a',
+                        level=logging.INFO,
+                        format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
+                        datefmt="%Y-%m-%d %H:%M:%S")
     for key in args.keys():
         logging.info('{0}: {1}'.format(key, args[key]))
 
