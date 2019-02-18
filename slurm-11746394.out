@@ -1,0 +1,14 @@
+Lmod has detected the following error: The following module(s) are unknown:
+"cudas"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "cudas"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+TensorBoard 1.12.2 at http://0.0.0.0:6006 (Press CTRL+C to quit)
+slurmstepd: error: *** JOB 11746394 ON gra975 CANCELLED AT 2019-02-15T15:49:58 DUE TO TIME LIMIT ***

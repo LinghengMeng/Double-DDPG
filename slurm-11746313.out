@@ -1,0 +1,2 @@
+/var/spool/slurmd/job11746313/slurm_script: line 7: tf_gpu/bin/activate: No such file or directory
+/var/spool/slurmd/job11746313/slurm_script: line 8: tensorboard: command not found
