@@ -4,7 +4,7 @@
 #SBATCH --time=24:00:00           # time (DD-HH:MM)
 #SBATCH --output=../Double_DDPG_Job_output/continuous_MountainCarContinuous-v0_ddpg_softcopy_action_noise_seed4_run3_%N-%j.out  # %N for node name, %j for jobID
 
-module load cuda cudnn
+module load qt/5.9.6 python/3.6.3 nixpkgs/16.09  gcc/7.3.0 boost/1.68.0
 source ~/tf_gpu/bin/activate
 
 python ./ddpg_discrete_action.py --env MountainCarContinuous-v0 --random-seed 4 --exploration-strategy action_noise --summary-dir ../Double_DDPG_Results_no_monitor/continuous/MountainCarContinuous-v0/ddpg_softcopy_action_noise_seed4_run3 --continuous-act-space-flag --double-ddpg-flag  
