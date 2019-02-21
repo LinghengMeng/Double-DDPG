@@ -1,8 +1,0 @@
-Lmod has detected the following error: These module(s) exist but cannot be
-loaded as requested: "cudnn"
-   Try: "module spider cudnn" to see how to load the module(s).
-
-
-
-TensorBoard 1.12.2 at http://0.0.0.0:6006 (Press CTRL+C to quit)
-slurmstepd: error: *** JOB 11747513 ON gra975 CANCELLED AT 2019-02-15T15:55:56 DUE TO TIME LIMIT ***
